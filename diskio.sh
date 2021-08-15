@@ -1,7 +1,7 @@
 #!/bin/bash
-echo "+-----------------------------------------------+"
-echo "|         Edit dh -h Output           |"
-echo "+-----------------------------------------------+"
+echo "+-------------------------------------+"
+echo "|         Modify dh -h Output         |"
+echo "+-------------------------------------+"
 
 #write the output of df-h into an array
 readarray -t array <<< "$(df -h)"
