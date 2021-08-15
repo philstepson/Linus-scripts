@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "+-----------------------------------------------+"
+echo "|         Edit dh -h Output           |"
+echo "+-----------------------------------------------+"
 
 #write the output of df-h into an array
 readarray -t array <<< "$(df -h)"
@@ -12,7 +15,3 @@ echo "${array[1]}"
 #print out whole array - for illustration only - uncomment the following line if you need it
 
 #printf -- "%s\n" "${array[@]}"
-
-
-
-
