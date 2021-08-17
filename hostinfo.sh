@@ -2,18 +2,27 @@
 echo "+-----------------------------------------------+"
 echo "|         Collect Server Information            |"
 echo "+-----------------------------------------------+"
-rm -r metrics; mkdir /opt/scripts/metrics;
-/opt/scripts/sar-cpu-avg.sh > /opt/scripts/metrics/SarCpuAv;
-/opt/scripts/sar-memory-avg.sh > /opt/scripts/metrics/SarMemAvg;
-/opt/scripts/sar-cpu-mem-avg.sh > /opt/scripts/metrics/CpuMemAvg;
-lscpu > /opt/scripts/metrics/lscpu; hostname > /opt/scripts/metrics/hostname;
- hostnamectl > /opt/scripts/metrics/hostnamectl; 
-dnsdomainname > /opt/scripts/metrics/dnsdomainname;
-dmidecode  > /opt/scripts/metrics/SysInfo
+HST="`hostname`"
+DAT="`date +%Y%m%d`"
+HOUR="`date +%H`"
+DIR="/opt/sripts/${HST}/${DAT}_${HOUR}"
+if ! test -d ${DIR}
+then
+        /bin/mkdir -p ${DIR}
+fi
+/opt/scripts/sar-cpu-avg.sh > ${DIR}/sat-cpu-avg;
+/opt/scripts/sar-memory-avg.sh > ${DIR}/sar-memory-avg.sh;
+/opt/scripts/sar-cpu-mem-avg.sh > ${DIR}/sar-cpu-mem-avg.sh;
+lscpu > /opt/scripts/metrics/lscpu; 
+hostname > ${DIR}/hostname;
+hostnamectl > ${DIR}/hostnamectl; 
+dnsdomainname > ${DIR}/dnsdomainname;
+dmidecode  > ${DIR}/dmidecode
 #sudo dmidecode | grep -A3 '^System Information'
-lsblk -o NAME,UUID,SIZE,FSTYPE,TYPE,MOUNTPOINT  > /opt/scripts/metrics/diskLSBLK
-du -h --max-depth=2 / 2>/dev/null | sort -rh | head -15 > /opt/scripts/metrics/disk1
-df -h > /opt/scripts/metrics/diskDF
-df -h --output=size --total | awk 'END {print $1}' > /opt/scripts/metrics/disktot
-/opt/scripts/diskio.sh > /opt/scripts/metrics/diskio
-iostat -m -x  > /opt/scripts/metrics/iostat
+lsblk -o NAME,UUID,SIZE,FSTYPE,TYPE,MOUNTPOINT  > ${DIR}/LSBLK
+du -h --max-depth=2 / 2>/dev/null | sort -rh | head -15 > ${DIR}/diskDU
+df -h > ${DIR}/diskDF;
+df -h --output=size --total | awk 'END {print $1}' > ${DIR}/disktot;
+/opt/scripts/diskio.sh > ${DIR}/diskio;
+iostat -m -x  > ${DIR}/iostat;
+tar cvf - /opt/scripts/metrics | gzip >stats-${HST}.tar.g
